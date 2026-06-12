@@ -30,7 +30,7 @@ ${resumeText}
         "https://openrouter.ai/api/v1/chat/completions",
         {
           model:
-            "nex-agi/nex-n2-pro:free",
+           "nex-agi/nex-n2-pro:free",
 
           messages: [
             {

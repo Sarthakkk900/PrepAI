@@ -62,10 +62,20 @@ Return ONLY valid JSON:
         }
       );
 
-    return JSON.parse(
-      response.data.choices[0]
-        .message.content
-    );
+   const content =
+  response.data.choices[0]
+    .message.content
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
+
+try {
+  return JSON.parse(content);
+} catch (err) {
+  console.log(content);
+  return [];
+}
+
 
   } catch (error) {
     console.error(error);
