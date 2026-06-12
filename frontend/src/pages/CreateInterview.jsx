@@ -8,6 +8,9 @@ function CreateInterview() {
   const [loading, setLoading] =
   useState(false);
 
+
+  const [uploadingResume, setUploadingResume] =
+  useState(false);
   const [formData, setFormData] =
     useState({
       role: "",
@@ -64,6 +67,65 @@ function CreateInterview() {
           category,
         ],
       });
+    }
+  };
+
+  const handleResumeUpload =
+  async (e) => {
+
+    const file =
+      e.target.files[0];
+
+    if (!file) return;
+
+    try {
+
+      setUploadingResume(true);
+
+      const token =
+        localStorage.getItem("token");
+
+      const formDataObj =
+        new FormData();
+
+      formDataObj.append(
+        "resume",
+        file
+      );
+
+      const res =
+        await api.post(
+          "/resume/upload",
+          formDataObj,
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+              "Content-Type":
+                "multipart/form-data",
+            },
+          }
+        );
+
+      setFormData((prev) => ({
+        ...prev,
+        role: res.data.role,
+        categories:
+          res.data.skills,
+      }));
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Resume upload failed"
+      );
+
+    } finally {
+
+      setUploadingResume(false);
+
     }
   };
 
@@ -209,6 +271,41 @@ function CreateInterview() {
         onSubmit={handleSubmit}
         className="space-y-8"
       >
+
+       <div className="bg-gradient-to-r from-sky-50 to-indigo-50 border border-slate-200 rounded-3xl p-6 mb-8">
+
+  <div className="flex items-center gap-4">
+
+    <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-sm">
+      📋
+    </div>
+
+    <div>
+      <h3 className="text-xl font-bold text-slate-900">
+        Upload Resume
+      </h3>
+
+      <p className="text-slate-500 text-sm">
+        Let PrepAI detect your skills and generate smarter interview questions.
+      </p>
+    </div>
+
+  </div>
+
+  <input
+    type="file"
+    accept=".pdf"
+    onChange={handleResumeUpload}
+    className="mt-5 w-full border border-slate-300 rounded-xl p-3 bg-white"
+  />
+
+  {uploadingResume && (
+    <p className="mt-3 text-slate-600">
+      🤖 Analyzing Resume...
+    </p>
+  )}
+
+</div>
 
         {/* Role Selection */}
 
