@@ -1,5 +1,5 @@
 import { PDFParse } from "pdf-parse";
-
+import { analyzeResume } from "../services/resumeAnalysis.service.js";
 export const uploadResume =
   async (req, res) => {
     try {
@@ -21,11 +21,17 @@ export const uploadResume =
       const data =
         await parser.getText();
 
-      res.status(200).json({
-        success: true,
-        resumeText:
-          data.text,
-      });
+        const analysis =
+  await analyzeResume(
+    data.text
+  );
+
+     res.status(200).json({
+  success: true,
+  role: analysis.role,
+  skills: analysis.skills,
+  resumeText: data.text,
+});
 
     } catch (error) {
 
