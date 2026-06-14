@@ -4,6 +4,7 @@ import api from "../api/axios";
 
 function Login() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -18,27 +19,25 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const res = await api.post(
-        "/auth/login",
-        formData
-      );
+  setLoading(true);
 
-      localStorage.setItem(
-        "token",
-        res.data.token
-      );
+  try {
+    const res = await api.post("/auth/login", formData);
 
-      navigate("/dashboard");
-    } catch (error) {
-      alert(
-        error.response?.data?.message ||
-          "Login Failed"
-      );
-    }
-  };
+    localStorage.setItem("token", res.data.token);
+
+    navigate("/dashboard");
+  } catch (error) {
+    alert(
+      error.response?.data?.message ||
+      "Login Failed"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
  return (
   <div className="min-h-screen bg-slate-50 flex items-center justify-center px-6">
@@ -101,11 +100,23 @@ function Login() {
           </div>
 
           <button
-            type="submit"
-            className="w-full py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition"
-          >
-            Sign In
-          </button>
+  type="submit"
+  disabled={loading}
+  className={`w-full py-3 rounded-xl text-white font-semibold transition flex items-center justify-center gap-2 ${
+    loading
+      ? "bg-slate-600 cursor-not-allowed"
+      : "bg-slate-900 hover:bg-slate-800"
+  }`}
+>
+  {loading ? (
+    <>
+      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+      Signing In...
+    </>
+  ) : (
+    "Sign In"
+  )}
+</button>
 
         </form>
 
