@@ -394,7 +394,7 @@ function CreateInterview() {
             Difficulty
           </h3>
 
-          <div className="flex gap-3">
+          <div className="flex gap-2 flex-wrap">
 
             {[
               "Easy",
