@@ -11,7 +11,7 @@ function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
 
-      <div className="max-w-6xl mx-auto px-8 py-4 flex justify-between items-center">
+      <div className="max-w-6xl mx-auto px-8 py-4 flex flex wrap  justify-between gap-2 items-center">
 
         <div
           onClick={() =>
